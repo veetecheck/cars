@@ -58,6 +58,14 @@ function FilterForm({ data, handleFilterData }) {
                 break;
         }
     };
+
+    const handleReset = () => {
+        handleFilterData(data);    
+        setSelModels([]);
+        setSelBrands([]);
+        setSelRegistration('');
+    }
+
     return (
         <fieldset>
             <legend>Vyhledávání</legend>
@@ -88,6 +96,7 @@ function FilterForm({ data, handleFilterData }) {
             </div>
             <div>
                 <button onClick={handleFilter}>Filtruj</button>
+                <button onClick={handleReset}>Resetuj</button>
             </div>
         </fieldset>
     )
