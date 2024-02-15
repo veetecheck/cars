@@ -76,7 +76,7 @@ function App() {
     );
   }
 
-  const handleClick = (source) => {
+  const handleUpdate = (source) => {
     let temp;
     switch (source) {
       case "add-car-form": {
@@ -104,19 +104,23 @@ function App() {
         temp = fillEmptyInfos(carToChange);
         if (confirm(temp)) {
           const index = cars.findIndex(car => car.id === temp.id);
-          const carsToUpdate = [...cars];
-          carsToUpdate[index] = temp;
-          setCars(carsToUpdate);
-          setCarsToShow(carsToUpdate);
-          setCarToChange({
-            id: 0,
-            brand: "",
-            model: "",
-            reg: "",
-            km: "",
-            year: ""
-          });
-          alert("Data byla úspěšně odeslána.");
+          if (index !== -1) {
+            const carsToUpdate = [...cars];
+            carsToUpdate[index] = temp;
+            setCars(carsToUpdate);
+            setCarsToShow(carsToUpdate);
+            setCarToChange({
+              id: 0,
+              brand: "",
+              model: "",
+              reg: "",
+              km: "",
+              year: ""
+            });
+            alert("Data byla úspěšně odeslána.");
+          } else {
+            alert("Neúspěšná aktualizace - nebylo zadáno existující auto.");
+          }
         } else {
           alert("Odeslání dat bylo zrušeno.");
         }
@@ -126,13 +130,13 @@ function App() {
     }
   }
 
-useEffect(() => { console.log(cars) }, [cars])
+  useEffect(() => { console.log(cars) }, [cars])
   return (
     <div className="container">
       <FilterForm data={cars} handleFilterData={handleFilterData} />
-      <UniForm id="add-car-form" data={newCar} handleNewData={handleNewData} handleClick={handleClick} />
+      <UniForm id="add-car-form" data={newCar} handleNewData={handleNewData} handleUpdate={handleUpdate} />
       <CarTable data={carsToShow} handleDelete={handleDelete} handleChange={handleChange} />
-      <UniForm id="change-car-form" data={carToChange} handleNewData={handleNewData} handleClick={handleClick} />
+      <UniForm id="change-car-form" data={carToChange} handleNewData={handleNewData} handleUpdate={handleUpdate} />
     </div>
   );
 }

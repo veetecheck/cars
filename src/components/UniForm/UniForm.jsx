@@ -1,6 +1,6 @@
 import React from 'react';
 
-function UniForm({ id, data, handleNewData, handleClick }) {
+function UniForm({ id, data, handleNewData, handleUpdate }) {
 
     const handleChange = (e) => {
         let temp = { ...data }
@@ -50,7 +50,7 @@ function UniForm({ id, data, handleNewData, handleClick }) {
                 <input type='number' name='year' value={data.year} onChange={handleChange} />
             </div>
             <div>
-                <button onClick={() => handleClick(id)}>Odešli data</button>
+                <button onClick={() => handleUpdate(id)}>Odešli data</button>
             </div>
         </div>
     );
