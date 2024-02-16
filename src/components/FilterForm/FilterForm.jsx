@@ -27,7 +27,7 @@ function FilterForm({ data, handleFilterData }) {
                 filtered = data.filter(car => selModels.includes(car.model));
                 break;
             case "reg":
-                filtered = data.filter(car => car.reg.includes(selRegistration));
+                filtered = data.filter(car => car.reg === selRegistration);
                 break;
             default:
                 break;
