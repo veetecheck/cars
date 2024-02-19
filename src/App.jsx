@@ -1,20 +1,19 @@
-import './App.css';
-import rawData from "./rawData.json"
-import { useEffect, useState } from 'react';
+import "./App.css";
+import rawData from "./rawData.json";
+import { useEffect, useState } from "react";
 import CarTable from "./components/CarTable/CarTable";
-import FilterForm from './components/FilterForm/FilterForm';
-import UniForm from './components/UniForm/UniForm';
+import UniForm from "./components/UniForm/UniForm";
+import FilterForm from "./components/FilterForm/FilterForm";
 
 function App() {
   const [cars, setCars] = useState(rawData.cars);
-  const [carsToShow, setCarsToShow] = useState(rawData.cars);
   const [newCar, setNewCar] = useState({
     id: cars.length > 0 ? Math.max(...cars.map((car) => car.id)) + 1 : 1,
     brand: "",
     model: "",
     reg: "",
     km: "",
-    year: ""
+    year: "",
   });
   const [carToChange, setCarToChange] = useState({
     id: 0,
@@ -22,36 +21,24 @@ function App() {
     model: "",
     reg: "",
     km: "",
-    year: ""
+    year: "",
   });
-  const handleFilterData = (filteredCars) => {
-    setCarsToShow(filteredCars);
-  }
+  const [carsToShow, setCarsToShow] = useState(rawData.cars);
 
-  const handleNewData = (data, source) => {
+  const handleNewData = (updatedCar, source) => {
     switch (source) {
       case "add-car-form": {
-        setNewCar(data);
+        setNewCar(updatedCar);
         break;
       }
       case "change-car-form": {
-        setCarToChange(data);
+        setCarToChange(updatedCar);
         break;
       }
-      default: break;
+      default:
+        break;
     }
-  }
-
-  const handleDelete = (idToDel) => {
-    const temp = cars.filter(car => car.id !== idToDel)
-    setCars(temp);
-    setCarsToShow(temp);
-  }
-
-  const handleChange = (idToChange) => {
-    const temp = cars.filter(car => car.id === idToChange)
-    setCarToChange(...temp);
-  }
+  };
 
   const fillEmptyInfos = (car) => {
     const filledCar = {
@@ -59,51 +46,51 @@ function App() {
       brand: car.brand.trim() ? car.brand : "empty",
       model: car.model.trim() ? car.model : "empty",
       reg: car.reg.trim() ? car.reg : "empty",
-      km: car.km.toString().trim() ? parseInt(car.km) : 0,
-      year: car.year.toString().trim() ? parseInt(car.year) : 0,
+      km: parseInt(car.km) || 0,
+      year: parseInt(car.year) || 0,
     };
     return filledCar;
-  }
+  };
 
-  const confirm = (car) => {
-    return (
-      window.confirm("Opravdu chcete odeslat data?\n" +
+  const confirmCar = (car) => {
+    return window.confirm(
+      "Opravdu chcete odeslat data?\n" +
         `Značka: ${car.brand}\n` +
         `Model: ${car.model}\n` +
-        `Registrační značka: ${car.reg}\n` +
+        `Reg.značka: ${car.reg}\n` +
         `Kilometry: ${car.km}\n` +
-        `Rok výroby: ${car.year}`)
+        `Rok výroby: ${car.year}\n`
     );
-  }
+  };
 
   const handleUpdate = (source) => {
     let temp;
     switch (source) {
       case "add-car-form": {
         temp = fillEmptyInfos(newCar);
-        if (confirm(temp)) {
+        if (confirmCar(temp)) {
           const carsToUpdate = [...cars];
           carsToUpdate.push(temp);
           setCars(carsToUpdate);
           setCarsToShow(carsToUpdate);
           setNewCar({
-            id: temp.id + 1,
+            id: newCar.id + 1,
             brand: "",
             model: "",
             reg: "",
             km: "",
-            year: ""
+            year: "",
           });
-          alert("Data byla úspěšně odeslána.");
+          alert("Data byla úspěšně odeslána");
         } else {
-          alert("Odeslání dat bylo zrušeno.");
+          alert("Odeslání dat bylo zrušeno");
         }
         break;
       }
       case "change-car-form": {
         temp = fillEmptyInfos(carToChange);
-        if (confirm(temp)) {
-          const index = cars.findIndex(car => car.id === temp.id);
+        if (confirmCar(temp)) {
+          const index = cars.findIndex((car) => car.id === temp.id);
           if (index !== -1) {
             const carsToUpdate = [...cars];
             carsToUpdate[index] = temp;
@@ -115,28 +102,74 @@ function App() {
               model: "",
               reg: "",
               km: "",
-              year: ""
+              year: "",
             });
-            alert("Data byla úspěšně odeslána.");
+            alert("Aktualizace dat úspěšná");
           } else {
-            alert("Neúspěšná aktualizace - nebylo zadáno existující auto.");
+            alert("Auto s daným id nebylo nalezeno");
+            setCarToChange({
+              id: 0,
+              brand: "",
+              model: "",
+              reg: "",
+              km: "",
+              year: "",
+            });
           }
         } else {
-          alert("Odeslání dat bylo zrušeno.");
+          alert("Aktualizace neproběhla");
         }
         break;
       }
-      default: break;
+      default:
+        break;
     }
-  }
+  };
 
-  useEffect(() => { console.log(cars) }, [cars])
+  const handleDelete = (idToDel) => {
+    const temp = cars.filter((car) => car.id !== idToDel);
+    setCars(temp);
+    setCarsToShow(temp);
+  };
+
+  const handleChange = (idToChange) => {
+    const temp = cars.filter((car) => car.id === idToChange);
+    setCarToChange(...temp);
+  };
+  // useEffect(() => {
+  //   console.log(carToChange);
+  // }, [carToChange]);
+
+  // useEffect(() => {
+  //   console.log(cars);
+  // }, [cars]);
+
+  const handleFilterData = (filteredCars) => {
+    setCarsToShow(filteredCars);
+  };
+
   return (
     <div className="container">
       <FilterForm data={cars} handleFilterData={handleFilterData} />
-      <UniForm id="add-car-form" data={newCar} handleNewData={handleNewData} handleUpdate={handleUpdate} />
-      <CarTable data={carsToShow} handleDelete={handleDelete} handleChange={handleChange} />
-      <UniForm id="change-car-form" data={carToChange} handleNewData={handleNewData} handleUpdate={handleUpdate} />
+      <CarTable
+        data={carsToShow}
+        handleDelete={handleDelete}
+        handleChange={handleChange}
+      />
+      <p>Přidání nového auta</p>
+      <UniForm
+        id="add-car-form"
+        data={newCar}
+        handleNewData={handleNewData}
+        handleUpdate={handleUpdate}
+      />
+      <p>Úpravy existujícího auta</p>
+      <UniForm
+        id="change-car-form"
+        data={carToChange}
+        handleNewData={handleNewData}
+        handleUpdate={handleUpdate}
+      />
     </div>
   );
 }
