@@ -5,23 +5,23 @@ function UniForm({ data, handleNewData, handleUpdate, id }) {
     let temp = { ...data };
     const { name, value } = e.target;
     switch (name) {
-      case "brand": {
+      case `${id}-brand`: {
         temp.brand = value;
         break;
       }
-      case "model": {
+      case `${id}-model`: {
         temp.model = value;
         break;
       }
-      case "reg": {
+      case `${id}-reg`: {
         temp.reg = value;
         break;
       }
-      case "km": {
+      case `${id}-km`: {
         temp.km = parseInt(value) || 0;
         break;
       }
-      case "year": {
+      case `${id}-year`: {
         temp.year = parseInt(value) || 0;
         break;
       }
@@ -35,47 +35,52 @@ function UniForm({ data, handleNewData, handleUpdate, id }) {
       <div>
         <input
           type="text"
-          name="brand"
+          name={`${id}-brand`}
+          id={`${id}-brand`}
           value={data.brand}
           onChange={handleChange}
         />
-        <label htmlFor="brand">Značka</label>
+        <label htmlFor={`${id}-brand`}>Značka</label>
       </div>
       <div>
         <input
           type="text"
-          name="model"
+          name={`${id}-model`}
+          id={`${id}-model`}
           value={data.model}
           onChange={handleChange}
         />
-        <label htmlFor="model">Model</label>
+        <label htmlFor={`${id}-model`}>Model</label>
       </div>
       <div>
         <input
           type="text"
-          name="reg"
+          name={`${id}-reg`}
+          id={`${id}-reg`}
           value={data.reg}
           onChange={handleChange}
         />
-        <label htmlFor="reg">Reg. značka</label>
+        <label htmlFor={`${id}-reg`}>Reg. značka</label>
       </div>
       <div>
         <input
           type="number"
-          name="km"
+          name={`${id}-km`}
+          id={`${id}-km`}
           value={data.km}
           onChange={handleChange}
         />
-        <label htmlFor="km">Najeto</label>
+        <label htmlFor={`${id}-km`}>Najeto</label>
       </div>
       <div>
         <input
           type="number"
-          name="year"
+          name={`${id}-year`}
+          id={`${id}-year`}
           value={data.year}
           onChange={handleChange}
         />
-        <label htmlFor="year">Rok výroby</label>
+        <label htmlFor={`${id}-year`}>Rok výroby</label>
       </div>
       <div>
         <button onClick={() => handleUpdate(id)}>Odešli</button>
